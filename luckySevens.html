@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<title>Lucky Sevens</title>
+	<script type="text/javascript">
+		function luckySevens() {
+			var bet = document.getElementById("bet").value;
+			var tally = 0
+			var counter = 0
+			var gameMoney = bet
+			var betsArray = [bet];
+			var maxHeld = 0;
+
+			if (bet <= 0) {
+				alert("Starting bet must be greater than $0.00");
+				return false;
+			}
+
+			while (gameMoney > 0) {
+				tally++;
+
+				var die1 = Math.floor(Math.random() * 6) + 1;
+				var die2 = Math.floor(Math.random() * 6) + 1;
+				var dice = die1 + die2;
+				var message = "You rolled a " + die1 + " and a " + die2 + " for a total of " + dice;
+				document.getElementById("myMessage").innerHTML = message;
+
+				// win
+				if (dice == 7) {
+					gameMoney = gameMoney + 4;
+					var lastHand = betsArray[betsArray.length - 1];
+					var newHand = lastHand + 4;
+					betsArray.push(newHand);
+				}
+
+				// lose
+				else {
+					gameMoney--;
+					counter++;
+					var lastHand = betsArray[betsArray.length - 1];
+					var newHand = lastHand - 1;
+					betsArray.push(newHand);
+				}
+				tally = tally++
+			}
+
+
+			total = Math.max(...betsArray);
+			rolls = betsArray.indexOf(total) + 1;
+			if (rolls < 1) {
+				rolls = 0;
+			}
+
+			document.getElementById("results").style.display = "block";
+			document.getElementById("starting").innerText = bet;
+			document.getElementById("totalRolls").innerText = tally;
+			document.getElementById("max").innerText = total;
+			document.getElementById("rollCount").innerText = rolls;
+			return false;
+		}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<h1>Lucky Sevens</h1>
+		<form name="game" onsubmit="return luckySevens();" class="form-inline">
+			<p>
+				<div class="form-group">
+					<label for="bet">Starting Bet:</label>
+					<input type="number" class="form-control" id="bet" placeholder="$0.00">
+				</div>
+			</p>
+			<button type="submit" id="submitButton" class="btn btn-default">Play</button>
+		</form>
+		<hr />
+		<table id="results" class="table table-striped" style="display:none;">
+			<thead>
+				<tr>
+					<th colspan="2">Result</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Starting Bet</td>
+					<td><span id="starting"></span></td>
+				</tr>
+				<tr>
+					<td>Total Rolls Before Going Broke</td>
+					<td><span id="totalRolls"></span></td>
+				</tr>
+				<tr>
+					<td>Highest Amount Won</td>
+					<td><span id="max"></span></td>
+				</tr>
+				<tr>
+					<td>Roll Count at Highest Amount Won</td>
+					<td><span id="rollCount"></span></td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="myMessage"></div>
+	</div>
+
+
+</body>
+</html>
